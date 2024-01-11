@@ -13,10 +13,10 @@ def get_offers_from_website():
     items = main_container.find_elements(By.CSS_SELECTOR, 'div[data-index]')
     offers_list = []
     for item in items:
-        offerUrl = item.find_element(By.CSS_SELECTOR, 'a.css-4lqp8g').get_attribute('href')
+        offer_url = item.find_element(By.CSS_SELECTOR, 'a.css-4lqp8g').get_attribute('href')
         offer = item.find_element(By.CSS_SELECTOR, 'div.MuiBox-root.css-6vg4fr')
-        title = offer.find_element(By.CSS_SELECTOR, 'h2.css-16gpjqw')
-        salary = offer.find_element(By.CSS_SELECTOR, 'div.css-1b2ga3v')
-        company = item.find_element(By.CSS_SELECTOR, 'div.css-ldh1c9').find_element(By.TAG_NAME, 'span')
-        offers_list.append(offer_dto.Offer(offerUrl, title.text, company.text, salary.text))
+        title = offer.find_element(By.CSS_SELECTOR, 'h2.css-16gpjqw').text
+        salary = offer.find_element(By.CSS_SELECTOR, 'div.css-1b2ga3v').text
+        company = item.find_element(By.CSS_SELECTOR, 'div.css-ldh1c9').find_element(By.TAG_NAME, 'span').text
+        offers_list.append(offer_dto.Offer(offer_url, title, company, salary))
     return offers_list
