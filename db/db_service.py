@@ -4,6 +4,22 @@ from sqlalchemy.orm import sessionmaker
 import logging
 from offer.offer import Base, Offer
 
+host = 'localhost'
+port = 6603
+user = 'root'
+password = 'example'
+database = 'offers'
+
+# Ustawienia połączenia z bazą danych
+db_config = {
+    'host': host,
+    'port': port,
+    'user': user,
+    'password': password,
+    'database': database,
+    'raise_on_warnings': True,
+}
+
 
 def create_session_and_save_offers(offers):
     session = create_session()
@@ -17,7 +33,9 @@ def create_session_and_get_offers():
 
 
 def create_session():
-    engine = create_engine("mysql+mysqlconnector://root:Bdpsfirstjjoobb.cpp0002@127.0.0.1/job_offers")
+    # engine = create_engine("mysql+mysqlconnector://root:Bdpsfirstjjoobb.cpp0002@127.0.0.1/job_offers")
+    engine = create_engine("mysql+mysqlconnector://root:example@localhost:6603/offers")
+
     Base.metadata.create_all(engine)
     Session = sessionmaker(bind=engine)
     logging.info(f"Created session with database")

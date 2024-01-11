@@ -4,6 +4,6 @@ import logging
 
 def start_scheduling():
     scheduler = BackgroundScheduler()
-    scheduler.add_job(scrapper_service.fetch_all_offers_and_save_to_db, trigger='interval', seconds=30000)
+    scheduler.add_job(scrapper_service.fetch_all_offers_and_save_to_db, trigger='interval', seconds=5)
     logging.info(f"Starting scheduled tasks")
     scheduler.start()
