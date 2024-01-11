@@ -12,7 +12,7 @@ def create_session_and_save_offers(offers):
 
 def create_session_and_get_offers():
     session = create_session()
-    offers = get_offers_from_database(session)
+    offers = get_offers_from_database(session, limit=50)
     return offers
 
 
@@ -33,13 +33,16 @@ def save_offers_to_database(session, offers):
             added += 1
         except IntegrityError:
             session.rollback()
-            logging.info(f"Offer {offer} already exists in database")
+            logging.info(f"Offer with URL: {offer.offerUrl} already exists in database")
     logging.info(f"Added {added} offers to database")
     return added
 
-def get_offers_from_database(session):
+def get_offers_from_database(session, limit=None):
     logging.info(f"Getting offers from database")
-    offers = session.query(Offer).all()
+    query = session.query(Offer)
+    if limit is not None:
+        query = query.limit(limit)
+    offers = query.all()
     logging.info(f"Got {len(offers)} offers from database")
     return offers
 
