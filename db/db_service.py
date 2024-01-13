@@ -3,26 +3,20 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import sessionmaker
 import logging
 from offer.offer import Base, Offer
+import configparser
 
-host = 'localhost'
-port = 6603
-user = 'root'
-password = 'example'
-database = 'offers'
-
-# Ustawienia połączenia z bazą danych
-db_config = {
-    'host': host,
-    'port': port,
-    'user': user,
-    'password': password,
-    'database': database,
-    'raise_on_warnings': True,
-}
+config = configparser.ConfigParser()
+config.read('config.ini')
+host = config.get('database', 'host')
+port = int(config.get('database', 'port'))
+user = config.get('database', 'user')
+password = config.get('database', 'password')
+database = config.get('database', 'database')
 
 
-def create_session_and_save_offers(offers):
+def delete_old_offers_and_save_new_to_db(offers):
     session = create_session()
+    delete_all_offers_from_database(session)
     save_offers_to_database(session, offers)
     return session
 
@@ -34,12 +28,13 @@ def create_session_and_get_offers():
 
 def create_session():
     # engine = create_engine("mysql+mysqlconnector://root:Bdpsfirstjjoobb.cpp0002@127.0.0.1/job_offers")
-    engine = create_engine("mysql+mysqlconnector://root:example@localhost:6603/offers")
+    # engine = create_engine("mysql+mysqlconnector://root:example@localhost:6603/offers")
 
+    engine = create_engine(f"mysql+mysqlconnector://{user}:{password}@{host}:{port}/{database}")
     Base.metadata.create_all(engine)
-    Session = sessionmaker(bind=engine)
+    session = sessionmaker(bind=engine)
     logging.info(f"Created session with database")
-    return Session()
+    return session()
 
 def save_offers_to_database(session, offers):
     logging.info(f"Saving {len(offers)} offers to database")
@@ -64,3 +59,8 @@ def get_offers_from_database(session, limit=None):
     logging.info(f"Got {len(offers)} offers from database")
     return offers
 
+def delete_all_offers_from_database(session):
+    logging.info(f"Deleting all offers from database")
+    session.query(Offer).delete()
+    session.commit()
+    logging.info(f"Deleted all offers from database")

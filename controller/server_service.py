@@ -1,6 +1,10 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import db.db_service as db
 import json
+import configparser
+
+config = configparser.ConfigParser()
+config.read('config.ini')
 
 class rest_controller(BaseHTTPRequestHandler):
     def do_GET(self):
@@ -18,8 +22,10 @@ class rest_controller(BaseHTTPRequestHandler):
             self.wfile.write(bytes("Not Found", "utf8"))
 
 # Function to start the HTTP server
-def start_http_server(port):
-    server_address = ('localhost', port)
+def start_http_server():
+    http_port = int(config.get('server', 'port'))
+    http_address = config.get('server', 'address')
+    server_address = (http_address, http_port)
     httpd = HTTPServer(server_address, rest_controller)
     print(f"HTTP server started on {server_address }")
 
