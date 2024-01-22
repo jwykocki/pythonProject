@@ -27,8 +27,6 @@ def create_session_and_get_offers():
 
 
 def create_session():
-    # engine = create_engine("mysql+mysqlconnector://root:Bdpsfirstjjoobb.cpp0002@127.0.0.1/job_offers")
-    # engine = create_engine("mysql+mysqlconnector://root:example@localhost:6603/offers")
 
     engine = create_engine(f"mysql+mysqlconnector://{user}:{password}@{host}:{port}/{database}")
     Base.metadata.create_all(engine)

@@ -5,7 +5,7 @@ import configparser
 
 config = configparser.ConfigParser()
 config.read('config.ini')
-seconds = config.get('scheduler', 'seconds')
+seconds = int(config.get('scheduler', 'seconds'))
 
 def start_scheduling():
     scheduler = BackgroundScheduler()
